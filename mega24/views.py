@@ -94,7 +94,7 @@ def activation_of_coupon(request):
         discount, customer = request.data['discount'], request.data['customer']
         operation = CouponOperation.objects.get(discount__id=discount, customer__id=customer)
         serializer = ActivationCouponSerializer(operation, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,

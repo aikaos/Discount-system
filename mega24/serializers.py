@@ -105,12 +105,12 @@ class ActivationCouponSerializer(serializers.ModelSerializer):
         customer = data['customer']
 
         operation = CouponOperation.objects.get(discount=discount, customer=customer)
-
-        if pin != int(discount.id.pin):
-            raise ValidationError('Incorrect pin!')
-
-        elif operation.valid_to < timezone.now():
+        if operation.valid_to < timezone.now():
+            CouponOperation.objects.update(status='3')
             raise ValidationError('Coupon has expired!')
+
+        elif pin != int(discount.id.pin):
+            raise ValidationError('Incorrect pin!')
 
         return data
 
